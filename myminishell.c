@@ -1,6 +1,6 @@
 #include "../lib/my.h"
 #include <stdio.h>
-#include <mynotsominishell.h>
+#include "./mynotsominishell.h"
 #include <unistd.h>
 //#define BUF_SZ 256
 
@@ -9,12 +9,15 @@ int main()
 
 
 	int n;
-	prompt = "$ : "
 	int i;
     char* buffer;
+    gl_env.prompt = "$ : ";
+    gl_env.current_cmd = malloc(1);
+    gl_env.current_cmd = '\0';
+    gl_env.cmd_i = 0;
     buffer = malloc(sizeof(char) * (READMIN+1));
     
-    if(argc < 2){
+    /*if(argc < 2){
         my_str("not enough args");
         return 0;
     }
@@ -28,13 +31,13 @@ int main()
         current_elem->mode = 0;
 
 
-    }
+    }*/
     init_terminal();
     signal(SIGINT, quit_program);
-    signal(SIGWINCH, show_elems);
+    //signal(SIGWINCH, show_elems);
     init_caps();
     term_hide_cursor();
-    show_elems();
+    //show_elems();
     
     int j = 8;
     while(1){
@@ -45,11 +48,17 @@ int main()
         buffer[n]='\0';
 //        if(!gl_env.flag){
             //if screen showed successfully
-        if(!my_strcmp(buffer, KU)){
-            previous_command();
+        if (buffer[0] >= 'A' && buffer[0] <= 'Z' || buffer[0] >= 'a' && buffer[0] <= 'z' || buffer[0]>='0' && buffer[0]<='9'){
+
+            my_char(buffer[0]);
+            update_current_command(buffer[0],gl_env.cmd_i);
+            gl_env.cmd_i++;
+        }
+        else if(!my_strcmp(buffer, KU)){
+            //previous_command();
         }
         else if(!my_strcmp(buffer,KD)){
-            next_command();
+            //next_command();
         }
         else if(!my_strcmp(buffer,KL)){
             moveleft();
@@ -62,15 +71,53 @@ int main()
         }*/
 //      }
         else if(n==1 && buffer[0]==ESC){
+            my_str("quitting program");
             quit_program();
         }
         else if(n==1 && buffer[0]=='\n'){
             my_exec(gl_env.current_cmd);
+            gl_env.current_cmd = NULL;
+            gl_env.cmd_i = 0;
         }
         //my_str(buffer);
     }
     restore_terminal();
     //Initialize terminal
+}
+void update_current_command(char c, int i){
+    char * new_cmd;
+    my_str("\nAdding ");
+    my_char(c);
+    my_str(" At: ");
+    my_int(i);
+    my_str(" to: ");
+    if(!gl_env.current_cmd){
+        gl_env.current_cmd = xmalloc(1);
+        gl_env.current_cmd[0] = '\0';
+    }
+    my_str(gl_env.current_cmd);
+    my_str("This should be 2:");
+
+    if(i <= my_strlen(gl_env.current_cmd)){
+        if(i==my_strlen(gl_env.current_cmd)){
+            my_int(my_strlen(gl_env.current_cmd) + 2);
+            new_cmd = xmalloc(my_strlen(gl_env.current_cmd)+2);
+            my_strcpy(new_cmd,gl_env.current_cmd);
+            new_cmd[my_strlen(gl_env.current_cmd) + 1]= '\0';
+            new_cmd[my_strlen(gl_env.current_cmd)]= c;
+            my_str("\nNew size = ");
+            my_int(my_strlen(gl_env.current_cmd)+2);
+            free(gl_env.current_cmd);
+            gl_env.current_cmd = new_cmd;
+//            my_str(new_cmd);
+            my_char('\0');
+            return;
+        }
+        gl_env.current_cmd[i] = c;
+
+    }else{
+        my_str("something went wrong");
+    }
 }
 
 
@@ -78,6 +125,10 @@ int my_exec(char *cmd){
 	char ** vect;
 	pid_t pid;
 	my_char('\n');
+    if(!cmd){
+        my_str("Try typing a command before pressing enter.");
+        return;
+    }
 	if ( my_strcmp(cmd, "exit") == 0 )	
 	{
 		my_str("\nOh, so you prefer the other shell? \n");
@@ -103,6 +154,7 @@ int my_exec(char *cmd){
 			if ( execvp(vect[0], vect) < 0 )
 			{
 				my_str("Execution problem \n");
+                my_str(cmd);
 				exit(0);
 			}
 		}
@@ -157,9 +209,10 @@ void init_caps(){
 }
 //this function restores the terminal to the way I elft it before init terminal was called
 void restore_terminal(){
-    term_clear();
+    //term_clear();
     ioctl(0, TCSETA, &gl_env.line_backup);
-    //my_str("RESTORED");
+
+    my_str("RESTORED");
     //how to restore window thing?
     tputs(VECAP, 1, my_termprint);
     dup2(gl_env.stdio_backup,1);
@@ -177,6 +230,9 @@ char *term_get_cap(char* cap){
     return str;
 
 }
+void moveleft(){}
+void moveright(){}
+
 //this accepts a string, stops the program, and returns
 void panic(char* str){
     restore_terminal();
@@ -185,7 +241,7 @@ void panic(char* str){
 }
 //this quits the program. gracefully
 void quit_program(){
-    restore_terminal();
+    //restore_terminal();
     exit(0);
 }
 

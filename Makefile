@@ -20,7 +20,7 @@ LIBPATH = ../lib
 #fclean: clean + delete "name"
 #re: fclean + all
 all: $(OBJ)
-	cc -L$(LIBPATH) $(SRC) -lmy -o $(NAME)
+	cc -L$(LIBPATH) $(SRC) -lmy -lncurses -o $(NAME)
  
 clean:
 	-$(RM) *.o
