@@ -42,6 +42,7 @@
 #define VECAP "\E[?25h" // actual string for VE in case tgetstr doesn't find it
 #define VICAP "\E[?25l" // same as above but for VI
 #define ESC 27
+#define HISTMAX 100
 
 typedef struct  s_elem
 {
@@ -90,14 +91,18 @@ typedef struct  s_env
     int history_i;
     int cmd_i;
     char* prompt;
-    //line where current command STARTS
-    int line_number;
-    char* clipboard;
-    //int column_num;
+    int column_num;
+	//history stuff
+	int		history_size;
+	int 	history_current;
+	char*	history_array[HISTMAX];
+
+
 }       t_env;
 
 t_env   gl_env;
 // created as a structure to limit number of globals to 1
+
 //ADDED FOR MYNOTSOMINISHELL
 void    load_history();
 void    save_history(char *);
@@ -108,10 +113,12 @@ int     delete_cmd_from(int);
 void    previous_command();
 void    next_command();
 void    update_current_command(char, int);
-void    delete_from(int);
-void    copy_from(int);
-void    insert_at(int);
+void	delete_from(int);
+void	copy_from(int);
+void	insert_at(char *, int);
+
 //END
+
 void    init_terminal();
 void    restore_terminal();
 void    return_program();
