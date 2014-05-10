@@ -13,7 +13,7 @@ int main()
     char* buffer;
     gl_env.prompt = "$ : ";
     gl_env.current_cmd = malloc(1);
-    gl_env.current_cmd = '\0';
+    gl_env.current_cmd[0] = '\0';
     gl_env.cmd_i = 0;
     buffer = malloc(sizeof(char) * (READMIN+1));
     
@@ -32,14 +32,20 @@ int main()
 
 
     }*/
+//    return 1;
     init_terminal();
     signal(SIGINT, quit_program);
     //signal(SIGWINCH, show_elems);
+    //INIT CAPS MAKES ME SEGFAULT AND I DONT KNOW WHY
     init_caps();
-    term_hide_cursor();
+    /*restore_terminal();
+    return 0;*/
+    //term_hide_cursor();
     //show_elems();
     
     int j = 8;
+    my_str("\n");
+    my_str(gl_env.prompt);
     while(1){
         int n = read(0, buffer, READMIN);
         if(!n){
@@ -50,7 +56,7 @@ int main()
             //if screen showed successfully
         if (buffer[0] >= 'A' && buffer[0] <= 'Z' || buffer[0] >= 'a' && buffer[0] <= 'z' || buffer[0]>='0' && buffer[0]<='9'){
 
-            my_char(buffer[0]);
+//            my_char(buffer[0]);
             update_current_command(buffer[0],gl_env.cmd_i);
             gl_env.cmd_i++;
         }
@@ -78,6 +84,8 @@ int main()
             my_exec(gl_env.current_cmd);
             gl_env.current_cmd = NULL;
             gl_env.cmd_i = 0;
+            my_str("\n");
+            my_str(gl_env.prompt);
         }
         //my_str(buffer);
     }
@@ -86,31 +94,31 @@ int main()
 }
 void update_current_command(char c, int i){
     char * new_cmd;
-    my_str("\nAdding ");
+    //my_str("\nAdding ");
     my_char(c);
-    my_str(" At: ");
-    my_int(i);
-    my_str(" to: ");
+    //my_str(" At: ");
+    //my_int(i);
+    //my_str(" to: ");
     if(!gl_env.current_cmd){
         gl_env.current_cmd = xmalloc(1);
         gl_env.current_cmd[0] = '\0';
     }
-    my_str(gl_env.current_cmd);
-    my_str("This should be 2:");
+    //my_str(gl_env.current_cmd);
+    //my_str("This should be 2:");
 
     if(i <= my_strlen(gl_env.current_cmd)){
         if(i==my_strlen(gl_env.current_cmd)){
-            my_int(my_strlen(gl_env.current_cmd) + 2);
+    //        my_int(my_strlen(gl_env.current_cmd) + 2);
             new_cmd = xmalloc(my_strlen(gl_env.current_cmd)+2);
             my_strcpy(new_cmd,gl_env.current_cmd);
             new_cmd[my_strlen(gl_env.current_cmd) + 1]= '\0';
             new_cmd[my_strlen(gl_env.current_cmd)]= c;
-            my_str("\nNew size = ");
-            my_int(my_strlen(gl_env.current_cmd)+2);
+            //my_str("\nNew size = ");
+     //       my_int(my_strlen(gl_env.current_cmd)+2);
             free(gl_env.current_cmd);
             gl_env.current_cmd = new_cmd;
 //            my_str(new_cmd);
-            my_char('\0');
+      //      my_char('\0');
             return;
         }
         gl_env.current_cmd[i] = c;
@@ -230,8 +238,18 @@ char *term_get_cap(char* cap){
     return str;
 
 }
+void moveright(){
+    //int cmd_len = my_strlen(gl_env.current_cmd);
+    //length of line TO cursor
+    
+   /* int max_x = gl_env.win.ws_col;
+    int line_len = gl_env.cmd_i + my_strlen(gl_env.prompt);
+    if(gl_env.cmd_i < my_strlen(gl_env.current_cmd)){
+        //if can move left
+        if(line_len/gl_env. 
+    }*/
+}
 void moveleft(){}
-void moveright(){}
 
 //this accepts a string, stops the program, and returns
 void panic(char* str){

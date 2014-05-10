@@ -1,0 +1,18 @@
+#define HISTORY history_txt
+gl_cursor_x;
+gl_cursor_y;
+gl_current_line:
+gl_prompt_len;
+gl_clipboard;
+move_cursor_forward / back
+gl_print_string_from(int x,int y,char*);
+save_string_to_file;
+backup();
+restore();
+cut();
+paste();
+cut();
+move_cursor_left();
+move_cursor_right();
+move_cursor_end();
+backspace();
