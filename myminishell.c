@@ -83,6 +83,7 @@ int main()
             quit_program();
         }
         else if(n==1 && buffer[0]=='\n'){
+			addtohist(gl_env.current_cmd);
             my_exec(gl_env.current_cmd);
             gl_env.current_cmd = NULL;
             gl_env.cmd_i = 0;
