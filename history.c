@@ -59,3 +59,24 @@ void addtohist(char *command)
 	gl_env.history_array[0] = command; //make history_array[0] the command that was just entered
 	gl_env.history_current = -1; //set history_current to -1
 }
+
+void savehist()
+{
+	int fd;
+	int i;
+	char *del[] = {"rm", ".history", NULL};
+
+	execvp(del[0], del);
+	if(gl_env.history_size > 0)
+	{
+		fd = open(".history", O_WRONLY);
+		if(!fd)
+			my_panic("Error opening .history! \n");
+
+		for(i = 0; i < gl_env.history_size; i++)
+		{
+			write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i])));
+		}
+		close(fd);
+	}
+}
