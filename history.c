@@ -7,13 +7,14 @@ void print_history_at(unsigned int n)
 {
 	if(n >= HISTMAX)
 	{
-		my_panic("Out of range");
+		my_str("Out of range");
 	}
 	else
 	{
 		delete_from(0);
 		insert_at(gl_env.history_array[n], 0);
 	}
+	exit(0);
 }
 
 void older_history() //to be called when pressing up on the keyboard
@@ -71,7 +72,10 @@ void savehist()
 	{
 		fd = open(".history", O_WRONLY); //opens .history in write-only mode
 		if(!fd)  //if .history can't be opened
-			my_panic("Error opening .history! \n"); //panic
+		{
+			my_str("Error opening .history! \n"); //panic
+			exit(2);
+		}
 
 		for(i = 0; i < gl_env.history_size; i++) //for every item in history
 			write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i]))); //writes write it out in .history
@@ -91,7 +95,10 @@ void loadhist() //this totally won't work.  Needs a lot of editing.
 	{
 		fd = open(".history", O_RDONLY);
 		if(!fd)
-			my_panic("Error opening .history! \n");
+		{
+			my_str("Error opening .history! \n");
+			exit(2);
+		}
 
 		for(i = 0; i < gl_env.history_size; i++)
 			while (bufchar != '\n')
