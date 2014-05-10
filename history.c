@@ -66,23 +66,22 @@ void savehist()
 	int i;
 	char *del[] = {"rm", ".history", NULL};
 
-	execvp(del[0], del);
-	if(gl_env.history_size > 0)
+	execvp(del[0], del);  //deletes .history if it already exists
+	if(gl_env.history_size > 0)  //if there are commands to save
 	{
-		fd = open(".history", O_WRONLY);
-		if(!fd)
-			my_panic("Error opening .history! \n");
+		fd = open(".history", O_WRONLY); //opens .history in write-only mode
+		if(!fd)  //if .history can't be opened
+			my_panic("Error opening .history! \n"); //panic
 
-		for(i = 0; i < gl_env.history_size; i++)
-		{
-			write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i])));
-		}
-		close(fd);
+		for(i = 0; i < gl_env.history_size; i++) //for every item in history
+			write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i]))); //writes write it out in .history
+
+		close(fd); //close/save .history
 	}
-	exit(0);
+	exit(0); //end function
 }
 
-void loadhist()
+void loadhist() //this totally won't work.  Needs a lot of editing.
 {
 	int fd;
 	int i;
@@ -95,12 +94,9 @@ void loadhist()
 			my_panic("Error opening .history! \n");
 
 		for(i = 0; i < gl_env.history_size; i++)
-		{
 			while (bufchar != '\n')
-			{
 				bufchar = read(fd, gl_env.history_array[i], 1);
-			}
-		}
+
 		close(fd);
 	}
 	exit(0);
