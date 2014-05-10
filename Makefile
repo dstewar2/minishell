@@ -1,7 +1,7 @@
 #Makefile
 #________
 NAME= minishell
-SRC=  myminishell.c
+SRC=  myminishell.c history.c
 RM= rm -f
 LIBPATH = ../lib
 
@@ -33,4 +33,3 @@ fclean: clean
 re: fclean all
 #test: $(TESTOBJ)
 #	-L$(LIBPATH) $(TESTOBJ) $(LIBS) -o $(TESTNAME)
-
