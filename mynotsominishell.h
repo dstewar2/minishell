@@ -42,6 +42,7 @@
 #define VECAP "\E[?25h" // actual string for VE in case tgetstr doesn't find it
 #define VICAP "\E[?25l" // same as above but for VI
 #define ESC 27
+#define HISTMAX 100
 
 typedef struct  s_elem
 {
@@ -73,7 +74,7 @@ typedef struct  s_env
     int     flag;
     int     stdio_backup;
     int     nbelems;
-    int     pos;
+    int		pos;
     t_elem  *elements;
 
     //added for mynotsominishell
@@ -83,6 +84,12 @@ typedef struct  s_env
     int cmd_i;
     char* prompt;
     int column_num;
+	//history stuff
+	int		history_size;
+	int 	history_current;
+	char*	history_array[HISTMAX];
+
+
 }       t_env;
 
 t_env   gl_env;
