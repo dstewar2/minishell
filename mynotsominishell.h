@@ -94,6 +94,7 @@ typedef struct  s_env
 
 t_env   gl_env;
 // created as a structure to limit number of globals to 1
+
 //ADDED FOR MYNOTSOMINISHELL
 void    load_history();
 void    save_history(char *);
@@ -104,7 +105,12 @@ int     delete_cmd_from(int);
 void    previous_command();
 void    next_command();
 void    update_current_command(char, int);
+void	delete_from(int);
+void	copy_from(int);
+void	insert_at(char *, int);
+
 //END
+
 void    init_terminal();
 void    restore_terminal();
 void    return_program();
