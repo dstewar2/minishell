@@ -23,6 +23,12 @@
 #define NULL (0)
 #endif
 
+#define CTRLK 0x0B
+#define CTRLY 0x19
+#define CTRLA 0x01
+#define CTRLE 0x05
+#define CTRLL 0x0C
+
 #define KU "\E[A"
 #define KD "\E[B"
 #define KR "\E[C"
