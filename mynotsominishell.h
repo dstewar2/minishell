@@ -91,7 +91,9 @@ typedef struct  s_env
     int history_i;
     int cmd_i;
     char* prompt;
-    int column_num;
+//    int column_num;
+    int line_number;
+    char* clipboard;
 	//history stuff
 	int		history_size;
 	int 	history_current;

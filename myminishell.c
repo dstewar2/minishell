@@ -330,7 +330,7 @@ void copy_from(i){
     }
 }
 
-void insert_at(int i){
+void insert_at(char* str, int i){
     /*int i = 0;
     int paste_len = 
     while(i<gl_env.clipboard*/
