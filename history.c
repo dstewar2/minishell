@@ -57,7 +57,7 @@ void addtohist(char *command)
 	if(gl_env.history_size < HISTMAX) //if the array is not currently filled
 		gl_env.history_size++; //increase history_size
 
-	gl_env.history_array[0] = command; //make history_array[0] the command that was just entered
+	gl_env.history_array[0] = my_strdup(command); //make history_array[0] the command that was just entered
 	gl_env.history_current = -1; //set history_current to -1
 }
 
