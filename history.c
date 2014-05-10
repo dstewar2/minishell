@@ -62,22 +62,46 @@ void addtohist(char *command)
 
 void savehist()
 {
-    int fd;
-    int i;
-    char *del[] = {"rm", ".history", NULL};
+	int fd;
+	int i;
+	char *del[] = {"rm", ".history", NULL};
 
-    execvp(del[0], del);
-    if(gl_env.history_size > 0)
-    {
-        fd = open(".history", O_WRONLY);
-        if(!fd)
-            my_panic("Error opening .history! \n");
+	execvp(del[0], del);
+	if(gl_env.history_size > 0)
+	{
+		fd = open(".history", O_WRONLY);
+		if(!fd)
+			my_panic("Error opening .history! \n");
 
-        for(i = 0; i < gl_env.history_size; i++)
-        {
-            write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i])));
-        }
-        close(fd);
-    }
+		for(i = 0; i < gl_env.history_size; i++)
+		{
+			write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i])));
+		}
+		close(fd);
+	}
+	exit(0);
+}
+
+void loadhist()
+{
+	int fd;
+	int i;
+	char bufchar;
+
+	if(gl_env.history_size > 0)
+	{
+		fd = open(".history", O_RDONLY);
+		if(!fd)
+			my_panic("Error opening .history! \n");
+
+		for(i = 0; i < gl_env.history_size; i++)
+		{
+			while (bufchar != '\n')
+			{
+				bufchar = read(fd, gl_env.history_array[i], 1);
+			}
+		}
+		close(fd);
+	}
 	exit(0);
 }
