@@ -121,7 +121,6 @@ void update_current_command(char c, int i){
 
     if(i <= my_strlen(gl_env.current_cmd)){
         if(i==my_strlen(gl_env.current_cmd)){
-            my_str("AAAAAAAAAAAAAAAAA");
     //        my_int(my_strlen(gl_env.current_cmd) + 2);
             new_cmd = xmalloc(my_strlen(gl_env.current_cmd)+2);
             my_strcpy(new_cmd,gl_env.current_cmd);
