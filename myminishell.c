@@ -44,7 +44,8 @@ int main()
     //show_elems();
     
     int j = 8;
-    my_str("\n");
+    term_clear();
+    //my_str("\n");
     my_str(gl_env.prompt);
     while(1){
         int n = read(0, buffer, READMIN);
@@ -67,6 +68,7 @@ int main()
             //next_command();
         }
         else if(!my_strcmp(buffer,KL)){
+//            my_str("strlen legt!");
             moveleft();
         }
         else if(!my_strcmp(buffer,KR)){
@@ -197,6 +199,9 @@ void init_terminal(){
     fd = open(name, O_WRONLY);
     gl_env.stdio_backup = dup(1);
     dup2(fd, 1);
+    //margins
+    //tputs(gl_env.auto_wrap, 1, my_termprint);
+    tputs(gl_env.left_wrap, 1, my_termprint);
 }
 //this function gets strings for termcaps I need to store in gl_env
 void init_caps(){
@@ -204,6 +209,15 @@ void init_caps(){
     gl_env.clear = term_get_cap(CLEAR);
     gl_env.move = term_get_cap(MOVE);
     gl_env.left = term_get_cap(LEFT);
+    gl_env.curs_left = term_get_cap("le");
+    gl_env.curs_right = term_get_cap("nd");
+    gl_env.curs_up = term_get_cap("up");
+    gl_env.curs_down = term_get_cap("do");
+    gl_env.auto_wrap = term_get_cap("am");
+    gl_env.left_wrap = term_get_cap("bw");
+    //might ot be specifieid on linux machine
+    gl_env.beg_line = term_get_cap("cr");
+
     //gl_env.right = term_get_cap(RIGHT);
     //gl_env.up = term_get_cap(UP);
     //gl_env.down = term_get_cap(DOWN);
@@ -238,7 +252,33 @@ char *term_get_cap(char* cap){
     return str;
 
 }
+int get_curs_x(){
+    int max_x = gl_env.win.ws_col;
+    int line_len = gl_env.cmd_i + my_strlen(gl_env.prompt);
+    return line_len % max_x;
+}
+int get_curs_y(){
+    int max_x = gl_env.win.ws_col;
+    int line_len = gl_env.cmd_i + my_strlen(gl_env.prompt);
+    return gl_env.line_number + line_len / max_x;
+    
+}
 void moveright(){
+    //move_end();
+    //return;
+    if(gl_env.cmd_i < my_strlen(gl_env.current_cmd)){
+        gl_env.cmd_i++;
+        //term_move_cursor(get_curs_x(), get_curs_y());
+        if(!(gl_env.cmd_i % gl_env.win.ws_col)){
+            //if need to move down a line
+            //tputs(gl_env.curs_down, 1, my_termprint);
+            curs_down();
+            move_beg();
+
+        }else{
+            tputs(gl_env.curs_right, 1, my_termprint);
+        }
+    }
     //int cmd_len = my_strlen(gl_env.current_cmd);
     //length of line TO cursor
     
@@ -249,7 +289,53 @@ void moveright(){
         if(line_len/gl_env. 
     }*/
 }
-void moveleft(){}
+void moveleft(){
+    //move_beg();
+    if(gl_env.cmd_i > 0){
+        gl_env.cmd_i--;
+        if((gl_env.win.ws_col-1)==(gl_env.cmd_i % gl_env.win.ws_col)){
+            //if need to move up a line
+            curs_up();
+            move_end();
+        }else{
+            //tputs(gl_env.curs_left, 1, my_termprint);
+            //curs_down();
+            curs_left();
+        }
+        //term_move_cursor(get_curs_x(), get_curs_y());
+    }
+}
+
+//not good at freeing memory;
+void delete_from(i){
+    int counter = 0;
+    int temp = i;
+    if(i<=my_strlen(gl_env.current_cmd)){
+         while (temp++ < my_strlen(gl_env.current_cmd)){
+             my_char(' ');
+             curs_right();
+             counter++;
+         }
+         while(counter--){
+             curs_left();
+         }
+         gl_env.current_cmd[i] = 0;
+    }
+
+}
+
+void copy_from(i){
+    if(i<my_strlen(gl_env.current_cmd)){
+        gl_env.clipboard = my_strdup(gl_env.current_cmd + i);
+    }
+}
+
+void insert_at(int i){
+    /*int i = 0;
+    int paste_len = 
+    while(i<gl_env.clipboard*/
+}
+
 
 //this accepts a string, stops the program, and returns
 void panic(char* str){
@@ -286,3 +372,28 @@ void term_stand_end(){
 void term_clear(){
     tputs(gl_env.clear, 1, my_termprint);
 }
+void curs_left(){
+    tputs(gl_env.curs_left, 1, my_termprint);
+}
+void curs_right(){
+    tputs(gl_env.curs_right, 1, my_termprint);
+}
+void curs_up(){
+    tputs(gl_env.curs_up, 1, my_termprint);
+}
+void curs_down(){
+    tputs(gl_env.curs_down, 1, my_termprint);
+}
+//moves to beginning of line
+void move_beg(){
+    tputs(gl_env.beg_line, 1, my_termprint);
+}
+void move_end(){
+    ioctl(0, TIOCGWINSZ, &(gl_env.win));
+    int size_col = gl_env.win.ws_row;
+    my_int(size_col);
+    move_beg();
+    while(--size_col){
+        curs_right();
+    }
+} 

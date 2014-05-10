@@ -67,8 +67,16 @@ typedef struct  s_env
     char    *clear;
     char    *cursoroff;
     char    *cursoron;
+    char    *curs_left;
+    char    *curs_right;
+    char    *curs_down;
+    char    *curs_up;
+    char    *auto_wrap;
+    char    *left_wrap;
+    char    *beg_line;
+
     struct winsize win;
-    //win.col
+    //win.ws_col
     struct termio line_backup;
     int     flag;
     int     stdio_backup;
@@ -82,7 +90,10 @@ typedef struct  s_env
     int history_i;
     int cmd_i;
     char* prompt;
-    int column_num;
+    //line where current command STARTS
+    int line_number;
+    char* clipboard;
+    //int column_num;
 }       t_env;
 
 t_env   gl_env;
@@ -97,6 +108,9 @@ int     delete_cmd_from(int);
 void    previous_command();
 void    next_command();
 void    update_current_command(char, int);
+void    delete_from(int);
+void    copy_from(int);
+void    insert_at(int);
 //END
 void    init_terminal();
 void    restore_terminal();
@@ -105,7 +119,7 @@ char    *term_get_cap(char*);
 void    panic(char*);
 int     my_termprint(int);
 void    init_caps();
-void    term_move_cursor(int row, int column);
+void    term_move_cursor(int column, int row);
 void    term_hide_cursor();
 void    term_clear();
 void    term_vi();
@@ -120,6 +134,12 @@ void    movedown();
 void    moveleft();
 void    moveright();
 void    doselect();
+void    curs_left();
+void    curs_right();
+void    curs_up();
+void    curs_down();
+void    move_beg();
+void    move_end();
 /*
 void    getout(char);
 void    setup_elems(int, char**);
