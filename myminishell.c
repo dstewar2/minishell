@@ -55,11 +55,21 @@ int main()
         buffer[n]='\0';
 //        if(!gl_env.flag){
             //if screen showed successfully
+//        my_str(buffer);
         if (buffer[0] >= 'A' && buffer[0] <= 'Z' || buffer[0] >= 'a' && buffer[0] <= 'z' || buffer[0]>='0' && buffer[0]<='9'){
 
 //            my_char(buffer[0]);
             update_current_command(buffer[0],gl_env.cmd_i);
             gl_env.cmd_i++;
+        }
+        else if(buffer[0] == CTRLK){
+            copy_from(gl_env.cmd_i);
+            delete_from(gl_env.cmd_i);
+        }else if(buffer[0] == CTRLY){
+            my_str(gl_env.clipboard);
+            if(gl_env.clipboard){
+            //    insert_at(gl_env.clipboard, gl_env.cmd_i);
+            }
         }
         else if(!my_strcmp(buffer, KU)){
             //previous_command();
@@ -110,6 +120,7 @@ void update_current_command(char c, int i){
 
     if(i <= my_strlen(gl_env.current_cmd)){
         if(i==my_strlen(gl_env.current_cmd)){
+            my_str("AAAAAAAAAAAAAAAAA");
     //        my_int(my_strlen(gl_env.current_cmd) + 2);
             new_cmd = xmalloc(my_strlen(gl_env.current_cmd)+2);
             my_strcpy(new_cmd,gl_env.current_cmd);
@@ -264,6 +275,7 @@ int get_curs_y(){
     
 }
 void moveright(){
+//    sleep(1);
     //move_end();
     //return;
     if(gl_env.cmd_i < my_strlen(gl_env.current_cmd)){
@@ -291,12 +303,14 @@ void moveright(){
 }
 void moveleft(){
     //move_beg();
+ //   sleep(1);
     if(gl_env.cmd_i > 0){
         gl_env.cmd_i--;
         if((gl_env.win.ws_col-1)==(gl_env.cmd_i % gl_env.win.ws_col)){
             //if need to move up a line
             curs_up();
             move_end();
+            my_str("bad");
         }else{
             //tputs(gl_env.curs_left, 1, my_termprint);
             //curs_down();
@@ -310,14 +324,18 @@ void moveleft(){
 void delete_from(i){
     int counter = 0;
     int temp = i;
-    if(i<=my_strlen(gl_env.current_cmd)){
+    if(i<my_strlen(gl_env.current_cmd)){
          while (temp++ < my_strlen(gl_env.current_cmd)){
              my_char(' ');
-             curs_right();
+             gl_env.cmd_i++;
+             //moveright();
              counter++;
          }
+         moveleft();
+         //my_int(counter);
          while(counter--){
-             curs_left();
+             //my_int(counter);
+             moveleft();
          }
          gl_env.current_cmd[i] = 0;
     }
@@ -331,6 +349,15 @@ void copy_from(i){
 }
 
 void insert_at(char* str, int i){
+    char c;
+    int temp = 0;
+    if(!str){
+        return;
+    }
+    while(c = str[temp++]){
+        update_current_command(c, i);
+        i++;
+    }
     /*int i = 0;
     int paste_len = 
     while(i<gl_env.clipboard*/
