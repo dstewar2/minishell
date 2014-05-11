@@ -169,9 +169,9 @@ void delete_char(int i){
 //deletes line, rewrites prompt
 void clear_line(){
     //clear line
-    if(!gl_env.current_cmd){
+    /*if(!gl_env.current_cmd){
         return;
-    }
+    }*/
 //    my_int(gl_env.cmd_i);
    // return;
     int i=gl_env.cmd_i;
@@ -182,14 +182,15 @@ void clear_line(){
     while(i--){
         curs_left();
     }
-    i = my_strlen(gl_env.prompt)+my_strlen(gl_env.current_cmd);
-    while(i--){
+    i = my_strlen(gl_env.prompt)+(gl_env.current_cmd?my_strlen(gl_env.current_cmd):0);
+    while(i-->0){
         my_char(' ');
     }
-    gl_env.cmd_i = my_strlen(gl_env.current_cmd);
+    gl_env.cmd_i = (gl_env.current_cmd?(1+my_strlen(gl_env.current_cmd)):1);
     //move to beginning of line 
-    i = my_strlen(gl_env.current_cmd)+1;
-    while(i--){
+    //i = my_strlen(gl_env.current_cmd)+1;
+    i = gl_env.cmd_i;
+    while(i-- > 0){
         moveleft();
     }
     i = my_strlen(gl_env.prompt) + 1;
@@ -207,7 +208,7 @@ void clear_line(){
 //rewrites line and places cursor at index i. if -1 goes to end of line
 //just rewrites entire line
 void rewrite_line(int i){
-    ioctl(0, TIOCGWINSZ, &(gl_env.win));
+//    ioctl(0, TIOCGWINSZ, &(gl_env.win));
     clear_line();
     my_str(gl_env.current_cmd);
     gl_env.cmd_i = my_strlen(gl_env.current_cmd);

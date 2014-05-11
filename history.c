@@ -90,7 +90,7 @@ void savehist()
 		for(i = 0; i < gl_env.history_size; i++) //for every item in history
 		{
 			write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i]))); //writes write it out in .history
-//			write(fd, "\n", 1);
+			write(fd, "\n", 1);
 		}
 
 		close(fd); //close/save .history
