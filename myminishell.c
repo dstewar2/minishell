@@ -146,7 +146,8 @@ int main()
     //Initialize terminal
 }
 //backspace
-void delete_char(i){
+//deletes character at index i
+void delete_char(int i){
     //my_int(i);
     //delete char and does stuff
     int temp = i;
@@ -206,6 +207,7 @@ void clear_line(){
     gl_env.cmd_i = 0;
 }
 //rewrites line and places cursor at index i. if -1 goes to end of line
+//just rewrites entire line
 void rewrite_line(int i){
     ioctl(0, TIOCGWINSZ, &(gl_env.win));
     clear_line();
@@ -219,6 +221,7 @@ void rewrite_line(int i){
     }
 }
 
+//update current command by placing char c at index i. if i is too big, expand current command
 void update_current_command(char c, int i){
     char * new_cmd;
     //my_str("\nAdding ");
@@ -255,7 +258,7 @@ void update_current_command(char c, int i){
     }
 }
 
-
+//executes cmd as a shell command
 int my_exec(char *cmd){
 	char ** vect;
 	pid_t pid;
@@ -384,6 +387,7 @@ char *term_get_cap(char* cap){
     return str;
 
 }
+//the next two functions don't work but im scared to delete it and it's 4 AM
 int get_curs_x(){
     int max_x = gl_env.win.ws_col;
     int line_len = gl_env.cmd_i + my_strlen(gl_env.prompt);
@@ -395,6 +399,7 @@ int get_curs_y(){
     return gl_env.line_number + line_len / max_x;
     
 }
+//move cursor right. If at end of command, do nothing. Wrap at end of line
 void moveright(){
 //    sleep(1);
     //move_end();
@@ -426,6 +431,8 @@ void moveright(){
         if(line_len/gl_env. 
     }*/
 }
+//
+//move cursor left. if at beginning of command, do nothing. wrap at beginning of line
 void moveleft(){
     //move_beg();
  //   sleep(1);
@@ -447,12 +454,14 @@ void moveleft(){
     }
 }
 
+//clear page and rewrite current line
 void redraw_page(){
     ioctl(0, TIOCGWINSZ, &(gl_env.win));
     term_clear();
     rewrite_line(-1);
 }
 //not good at freeing memory;
+//backspace, deletes character at i
 void delete_from(i){
     int counter = 0;
     int temp = i;
@@ -473,13 +482,14 @@ void delete_from(i){
     }
 
 }
-
+//copies from index i in current command to clipboard
 void copy_from(i){
     if(i<my_strlen(gl_env.current_cmd)){
         gl_env.clipboard = my_strdup(gl_env.current_cmd + i);
     }
 }
 
+//inserts string at i in string
 void insert_at(char* str, int i){
     char c;
     int temp = 0;
@@ -512,7 +522,7 @@ void quit_program(){
     savehist();
     exit(0);
 }
-
+//send message to terminal
 int my_termprint(int c){
     return write(1, &c, 1);
 }
@@ -536,15 +546,19 @@ void term_stand_end(){
 void term_clear(){
     tputs(gl_env.clear, 1, my_termprint);
 }
+//move cursor left
 void curs_left(){
     tputs(gl_env.curs_left, 1, my_termprint);
 }
+//move cursor right
 void curs_right(){
     tputs(gl_env.curs_right, 1, my_termprint);
 }
+//move cursor up
 void curs_up(){
     tputs(gl_env.curs_up, 1, my_termprint);
 }
+//move cursor down
 void curs_down(){
     tputs(gl_env.curs_down, 1, my_termprint);
 }
@@ -552,6 +566,7 @@ void curs_down(){
 void move_beg(){
     tputs(gl_env.beg_line, 1, my_termprint);
 }
+//move to end of command
 void move_end(){
     ioctl(0, TIOCGWINSZ, &(gl_env.win));
     int size_col = gl_env.win.ws_row;
