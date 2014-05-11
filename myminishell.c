@@ -126,9 +126,9 @@ int main()
         else if(n==1 && buffer[0]=='\n'){
 			addtohist(gl_env.current_cmd);
             my_exec(gl_env.current_cmd);
-            gl_env.current_cmd = '\0';
-            //gl_env.current_cmd = malloc(1);
-            //gl_env.current_cmd = '\0';
+           // gl_env.current_cmd = 
+            gl_env.current_cmd = malloc(1);
+            gl_env.current_cmd[0] = '\0';
 
             gl_env.cmd_i = 0;
             my_str("\n");
