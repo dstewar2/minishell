@@ -28,6 +28,7 @@
 #define CTRLA 0x01
 #define CTRLE 0x05
 #define CTRLL 0x0C
+#define BACKSPACE 0x08
 
 #define KU "\E[A"
 #define KD "\E[B"
@@ -126,8 +127,9 @@ void	delete_from(int);
 void	copy_from(int);
 void	insert_at(char *, int);
 void    delete_char();
-void    delete_line();
-void    rewrite_line();
+void    clear_line();
+void    rewrite_line(int);
+void    redraw_page();
 
 //END
 

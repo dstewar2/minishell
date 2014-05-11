@@ -36,7 +36,7 @@ int main()
 //    return 1;
     init_terminal();
     // signal(SIGINT, quit_program);
-    //signal(SIGWINCH, show_elems);
+    signal(SIGWINCH, redraw_page);
     //INIT CAPS MAKES ME SEGFAULT AND I DONT KNOW WHY
     init_caps();
 //    restore_terminal();
@@ -60,7 +60,7 @@ int main()
         buffer[n]='\0';
 //        if(!gl_env.flag){
             //if screen showed successfully
-//        my_str(buffer);
+//        my_int(buffer[0]);
         if (buffer[0] >= 'A' && buffer[0] <= 'Z' || buffer[0] >= 'a' && buffer[0] <= 'z' || buffer[0]>='0' && buffer[0]<='9'){
 
 //            my_char(buffer[0]);
@@ -92,14 +92,18 @@ int main()
             
         }
         else if(buffer[0] == CTRLL){
-            
-
+            term_clear();
+            rewrite_line(-1);
+        }
+        else if(buffer[0] == 127 || buffer[0] == '\b' || buffer[0]==0x08){
+ //           my_str("DEEEELEEEEETE");
+            delete_char(gl_env.cmd_i-1);
         }
         else if(!my_strcmp(buffer, KU)){
-            //previous_command();
+            older_history();
         }
         else if(!my_strcmp(buffer,KD)){
-            //next_command();
+            newer_history();
         }
         else if(!my_strcmp(buffer,KL)){
 //            my_str("strlen legt!");
@@ -130,13 +134,29 @@ int main()
     //Initialize terminal
 }
 //backspace
-void delete_char(){
-    //make new thing
-
+void delete_char(i){
+    //my_int(i);
+    //delete char and does stuff
+    int temp = i;
+    //if(i>my_strlen(gl_env.current_cmd)){
+    //my_str("DEEEEEELEEEEEEEEEETING");
+    if(i<0){
+        return;
+    }
+    clear_line();
+    while(i<my_strlen(gl_env.current_cmd)){
+        gl_env.current_cmd[i] = gl_env.current_cmd[i+1];
+        i++;
+    }
+    my_str(gl_env.current_cmd);
+    gl_env.cmd_i = my_strlen(gl_env.current_cmd);
+    while(temp++<my_strlen(gl_env.current_cmd)){
+        moveleft();
+    }
 }
 
 //deletes line, rewrites prompt
-void delete_line(){
+void clear_line(){
     //clear line
     int i=gl_env.cmd_i;
     while(i--)
@@ -145,20 +165,38 @@ void delete_line(){
     while(i--)
         curs_left();
     i = my_strlen(gl_env.prompt)+my_strlen(gl_env.current_cmd);
-    while(i--);
+    while(i--){
         my_char(' ');
+    }
+    gl_env.cmd_i = my_strlen(gl_env.current_cmd);
     //move to beginning of line 
-    i = my_strlen(gl_env.prompt)+my_strlen(gl_env.current_cmd);
+
+    while(gl_env.cmd_i){
+        moveleft();
+    }
+    i = my_strlen(gl_env.prompt);
+    while(i--){
+        curs_left();
+    }
+    
+
+    //delete_from(0);
     //write prompt
     my_str(gl_env.prompt);
+    //my_str("AAAAAAAAAAAAAAAAAAAAAA");
     gl_env.cmd_i = 0;
 }
-//rewrites line and places cursor at index i
+//rewrites line and places cursor at index i. if -1 goes to end of line
 void rewrite_line(int i){
-    delete_line();
-    my_str("cmd");
-    while(i-->0){
-        moveright();
+    ioctl(0, TIOCGWINSZ, &(gl_env.win));
+    clear_line();
+    my_str(gl_env.current_cmd);
+    gl_env.cmd_i = my_strlen(gl_env.current_cmd);
+    if(i<0){
+        return;
+    }
+    while(i++<my_strlen(gl_env.current_cmd)){
+        moveleft();
     }
 }
 
@@ -209,6 +247,7 @@ int my_exec(char *cmd){
     }
 	if ( my_strcmp(cmd, "exit") == 0 )	
 	{
+        quit_program();
 		my_str("\nOh, so you prefer the other shell? \n");
 		my_str("Goodbye. \n");
 		exit(0);
@@ -389,6 +428,11 @@ void moveleft(){
     }
 }
 
+void redraw_page(){
+    ioctl(0, TIOCGWINSZ, &(gl_env.win));
+    term_clear();
+    rewrite_line(-1);
+}
 //not good at freeing memory;
 void delete_from(i){
     int counter = 0;
@@ -443,6 +487,8 @@ void panic(char* str){
 }
 //this quits the program. gracefully
 void quit_program(){
+    term_clear();
+    my_str("Goodbye!\n");
     restore_terminal();
     exit(0);
 }
