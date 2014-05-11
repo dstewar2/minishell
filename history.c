@@ -92,6 +92,7 @@ void loadhist() //this totally won't work.  Needs a lot of editing.
 {
 	int fd;
 	int i;
+	int j;
 	char bufchar;
 
 	if(gl_env.history_size > 0)
@@ -103,9 +104,17 @@ void loadhist() //this totally won't work.  Needs a lot of editing.
 			exit(2);
 		}
 
-		for(i = 0; i < gl_env.history_size; i++)
+		for(i = 0; i < HISTMAX; i++)
+		{
+			j = 0;
+			gl_env.history_array[i] = xmalloc((sizeof(char)) * BUF_SZ);
 			while (bufchar != '\n')
+			{
 				bufchar = read(fd, gl_env.history_array[i], 1);
+				gl_env.history_array[i][j] = bufchar;
+				j++;
+			}
+		}
 
 		close(fd);
 	}

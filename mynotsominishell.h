@@ -49,6 +49,7 @@
 #define VICAP "\E[?25l" // same as above but for VI
 #define ESC 27
 #define HISTMAX 100
+#define BUF_SZ 256
 
 typedef struct  s_elem
 {
