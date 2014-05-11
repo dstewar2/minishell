@@ -7,7 +7,150 @@
 int main()
 {
 
+/*addtohist("1");
+addtohist("2");
+addtohist("3");
+addtohist("4");
+addtohist("5");
+addtohist("6");
+addtohist("7");
+addtohist("8");
+addtohist("9");
+my_str(gl_env.history_array[0]);
+addtohist("10");
+addtohist("11");
+addtohist("12");
+addtohist("13");
+addtohist("14");
+addtohist("15");
+addtohist("16");
+addtohist("17");
+addtohist("18");
+addtohist("19");
+my_str(gl_env.history_array[0]);
+addtohist("20");
+addtohist("21");
+addtohist("22");
+addtohist("23");
+addtohist("24");
+addtohist("25");
+addtohist("26");
+addtohist("27");
+addtohist("28");
+addtohist("29");
+my_str(gl_env.history_array[0]);
+addtohist("30");
+addtohist("31");
+addtohist("32");
+addtohist("33");
+addtohist("34");
+addtohist("35");
+addtohist("36");
+addtohist("37");
+addtohist("38");
+addtohist("39");
+my_str(gl_env.history_array[0]);
+addtohist("40");
+addtohist("41");
+addtohist("42");
+addtohist("43");
+addtohist("44");
+addtohist("45");
+addtohist("46");
+addtohist("47");
+addtohist("48");
+addtohist("49");
+my_str(gl_env.history_array[0]);
+addtohist("50");
+addtohist("51");
+addtohist("52");
+addtohist("53");
+addtohist("54");
+addtohist("55");
+addtohist("56");
+addtohist("57");
+addtohist("58");
+addtohist("59");
+my_str(gl_env.history_array[0]);
+addtohist("60");
+addtohist("61");
+addtohist("62");
+addtohist("63");
+addtohist("64");
+addtohist("65");
+addtohist("66");
+addtohist("67");
+addtohist("68");
+addtohist("69");
+my_str(gl_env.history_array[0]);
+addtohist("70");
+addtohist("71");
+addtohist("72");
+addtohist("73");
+addtohist("74");
+addtohist("75");
+addtohist("76");
+addtohist("77");
+addtohist("78");
+addtohist("79");
+my_str(gl_env.history_array[0]);
+addtohist("80");
+addtohist("81");
+addtohist("82");
+addtohist("83");
+addtohist("84");
+addtohist("85");
+addtohist("86");
+addtohist("87");
+addtohist("88");
+addtohist("89");
+my_str(gl_env.history_array[0]);
+addtohist("90");
+addtohist("91");
+addtohist("92");
+addtohist("93");
+my_str(gl_env.history_array[0]);
+addtohist("94");
+my_str(gl_env.history_array[0]);
+addtohist("95");
+my_str(gl_env.history_array[0]);
+addtohist("96");
+my_str(gl_env.history_array[0]);
+addtohist("97");
+my_str(gl_env.history_array[0]);
+addtohist("98");
+my_str(gl_env.history_array[0]);
+addtohist("99");
+my_str(gl_env.history_array[0]);
+addtohist("100");
+my_str(gl_env.history_array[0]);
+addtohist("101");
+my_str(gl_env.history_array[0]);
+addtohist("102");
+my_str(gl_env.history_array[0]);
+addtohist("103");
+addtohist("104");
+addtohist("105");
+addtohist("106");
+addtohist("107");
+addtohist("108");
+addtohist("109");*/
 
+/*	my_str(gl_env.history_array[0]);
+	my_char('\n');
+	my_str(gl_env.history_array[1]);
+	my_char('\n');
+	my_str(gl_env.history_array[2]); //should print thr33 2 one
+	my_char('\n');
+	my_str("size = ");
+	my_int(gl_env.history_size);
+	my_char('\n');*/
+    savehist();
+
+
+
+if(0)
+{
 	int n;
 	int i;
     char* buffer;
@@ -93,7 +236,6 @@ int main()
             quit_program();
         }
         else if(n==1 && buffer[0]=='\n'){
-			addtohist(gl_env.current_cmd);
             my_exec(gl_env.current_cmd);
             gl_env.current_cmd = NULL;
             gl_env.cmd_i = 0;
@@ -104,6 +246,7 @@ int main()
     }
     restore_terminal();
     //Initialize terminal
+}
 }
 void update_current_command(char c, int i){
     char * new_cmd;
