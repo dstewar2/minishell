@@ -11,6 +11,10 @@ void print_history_at(unsigned int n)
 	}
 	else
 	{
+        if(!gl_env.history_array[n]){
+            my_str("THIS DIDN'T WORK");
+            return;
+        }
 		clear_line();
         my_str(gl_env.history_array[n]);
         gl_env.current_cmd = my_strdup(gl_env.history_array[n]);
