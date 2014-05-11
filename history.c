@@ -17,7 +17,7 @@ void print_history_at(unsigned int n)
         }
 		clear_line();
 //        my_str("GOT HERE");
-        if(my_strlen(gl_env.history_array[n])>0){
+        if(my_strlen(gl_env.history_array[n])>0 && gl_env.history_array[n][my_strlen(gl_env.history_array[n])-1]=='\n'){
             gl_env.history_array[n][my_strlen(gl_env.history_array[n])-1]='\0';
         }
         my_str(gl_env.history_array[n]);
@@ -90,7 +90,7 @@ void savehist()
 		for(i = 0; i < gl_env.history_size; i++) //for every item in history
 		{
 			write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i]))); //writes write it out in .history
-			write(fd, "\n", 1);
+//			write(fd, "\n", 1);
 		}
 
 		close(fd); //close/save .history
