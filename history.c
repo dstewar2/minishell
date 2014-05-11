@@ -17,6 +17,9 @@ void print_history_at(unsigned int n)
         }
 		clear_line();
 //        my_str("GOT HERE");
+        if(my_strlen(gl_env.history_array[n])>0){
+            gl_env.history_array[n][my_strlen(gl_env.history_array[n])-1]='\0';
+        }
         my_str(gl_env.history_array[n]);
         gl_env.current_cmd = my_strdup(gl_env.history_array[n]);
         gl_env.cmd_i = my_strlen(gl_env.current_cmd);
