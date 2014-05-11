@@ -11,11 +11,9 @@ void print_history_at(unsigned int n)
 	}
 	else
 	{
-//		delete_from(0);
-//		insert_at(gl_env.history_array[n], 0);
-		my_str(gl_env.history_array[n]);
+		delete_from(0);
+		insert_at(gl_env.history_array[n], 0);
 	}
-	exit(0);
 }
 
 void older_history() //to be called when pressing up on the keyboard
