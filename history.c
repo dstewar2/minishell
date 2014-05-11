@@ -42,23 +42,23 @@ void newer_history()
 
 void addtohist(char *command)
 {
-	if(gl_env.history_size != 0)
-	{
-		int i;
+    if(gl_env.history_size != 0)
+    {
+        int i;
 
-		if(gl_env.history_size == HISTMAX) //if the array is full
-			free(gl_env.history_array[HISTMAX-1]);
+        if(gl_env.history_size == HISTMAX) //if the array is full
+            free(gl_env.history_array[HISTMAX-1]);
 
-		for(i = gl_env.history_size-1; i > 0; i--) //start at 1 less than the size of history (the last populated item in the array); do for every item except the first
-		{
-			gl_env.history_array[i] = gl_env.history_array[i-1]; //move it back
-		}
-	}
-	if(gl_env.history_size < HISTMAX) //if the array is not currently filled
-		gl_env.history_size++; //increase history_size
+        for(i = gl_env.history_size; i > 0; i--) //start at 1 less than the size of history (the last populated item in the array); do for every item except the first
+        {
+            gl_env.history_array[i] = gl_env.history_array[i-1]; //move it back
+        }
+    }
+    if(gl_env.history_size < HISTMAX) //if the array is not currently filled
+        gl_env.history_size++; //increase history_size
 
-	gl_env.history_array[0] = my_strdup(command); //make history_array[0] the command that was just entered
-	gl_env.history_current = -1; //set history_current to -1
+    gl_env.history_array[0] = my_strdup(command); //make history_array[0] the command that was just entered
+    gl_env.history_current = -1; //set history_current to -1
 }
 
 void savehist()
@@ -67,18 +67,20 @@ void savehist()
 	int i;
 	char *del[] = {"rm", ".history", NULL};
 
-	execvp(del[0], del);  //deletes .history if it already exists
 	if(gl_env.history_size > 0)  //if there are commands to save
 	{
-		fd = open(".history", O_WRONLY); //opens .history in write-only mode
-		if(!fd)  //if .history can't be opened
+		fd = open(".history", O_WRONLY|O_TRUNC|O_CREAT, 0666); //clears .history if it exists, if it does not, creates it.  Then opens in read only mode
+		if(fd == 0)  //if .history can't be opened
 		{
-			my_str("Error opening .history! \n"); //panic
+			my_str("Error opening .history! \n");
 			exit(2);
 		}
 
 		for(i = 0; i < gl_env.history_size; i++) //for every item in history
+		{
 			write(fd, gl_env.history_array[i], (sizeof(char) * my_strlen(gl_env.history_array[i]))); //writes write it out in .history
+			write(fd, "\n", 1);
+		}
 
 		close(fd); //close/save .history
 	}
@@ -94,7 +96,7 @@ void loadhist() //this totally won't work.  Needs a lot of editing.
 	if(gl_env.history_size > 0)
 	{
 		fd = open(".history", O_RDONLY);
-		if(!fd)
+		if(!fd) //most likely because it doesn't exist
 		{
 			my_str("Error opening .history! \n");
 			exit(2);
