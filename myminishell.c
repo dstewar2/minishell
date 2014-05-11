@@ -82,6 +82,9 @@ int main()
             while(k--){
                 moveleft();
             }
+        } 
+        else if(buffer[0] == '\t'){
+            clear_line();
         }
         else if(buffer[0] == CTRLE){
             //move to end of line
@@ -123,7 +126,10 @@ int main()
         else if(n==1 && buffer[0]=='\n'){
 			addtohist(gl_env.current_cmd);
             my_exec(gl_env.current_cmd);
-            gl_env.current_cmd = NULL;
+            gl_env.current_cmd = '\0';
+            //gl_env.current_cmd = malloc(1);
+            //gl_env.current_cmd = '\0';
+
             gl_env.cmd_i = 0;
             my_str("\n");
             my_str(gl_env.prompt);
@@ -158,23 +164,30 @@ void delete_char(i){
 //deletes line, rewrites prompt
 void clear_line(){
     //clear line
+    if(!gl_env.current_cmd){
+        return;
+    }
+    my_int(gl_env.cmd_i);
+   // return;
     int i=gl_env.cmd_i;
-    while(i--)
+    while(i--){
         moveleft();
+    }
     i = my_strlen(gl_env.prompt);
-    while(i--)
+    while(i--){
         curs_left();
+    }
     i = my_strlen(gl_env.prompt)+my_strlen(gl_env.current_cmd);
     while(i--){
         my_char(' ');
     }
     gl_env.cmd_i = my_strlen(gl_env.current_cmd);
     //move to beginning of line 
-
-    while(gl_env.cmd_i){
+    i = my_strlen(gl_env.current_cmd);
+    while(i--){
         moveleft();
     }
-    i = my_strlen(gl_env.prompt);
+    i = my_strlen(gl_env.prompt) + 1;
     while(i--){
         curs_left();
     }
