@@ -16,6 +16,7 @@ void print_history_at(unsigned int n)
             return;
         }
 		clear_line();
+//        my_str("GOT HERE");
         my_str(gl_env.history_array[n]);
         gl_env.current_cmd = my_strdup(gl_env.history_array[n]);
         gl_env.cmd_i = my_strlen(gl_env.current_cmd);
@@ -28,9 +29,7 @@ void print_history_at(unsigned int n)
 void older_history() //to be called when pressing up on the keyboard
 {
 	if(gl_env.history_current != gl_env.history_size - 1) //If the user is not at the earliest item in history
-	//if(gl_env.history_current < gl_env.history_size - 1) //If the user is not at the earliest item in history
 	{
-        return;
 		gl_env.history_current++; //go one item further back into history
 		print_history_at(gl_env.history_current); //print that item from history into the prompt
 	}
@@ -102,6 +101,9 @@ void loadhist() //this totally won't work.  Needs a lot of editing.
 	int j;
 	int n;
 	char *bufchar;
+	char broken = 0;
+
+	gl_env.history_size = 0;
 
 	fd = open(".history", O_RDONLY);
 	if(!fd) //most likely because it doesn't exist
@@ -113,21 +115,32 @@ void loadhist() //this totally won't work.  Needs a lot of editing.
 	for(i = 0; i < HISTMAX; i++)
 	{
 		j = 0;
+		my_int(i);
 		gl_env.history_array[i] = (char *)xmalloc((sizeof(char)) * BUF_SZ);
 		bufchar = (char *)xmalloc(sizeof(char) * 1);
 		while (bufchar[0] != '\n')
 		{
 			n = read(fd, bufchar, 1);
 			if(!n)
+			{
+//				my_str("broke");
+				char broken = 1;
+				bufchar[0] = '\n';
 				break;
+			}
 //			my_str("bufchar set");
 			gl_env.history_array[i][j] = bufchar[0];
+//			my_char(bufchar[0]);
 //			my_str("set j of i of array to bufchar");
 			j++;
 //			my_int(j);
 		}
 //		my_str(gl_env.history_array[i]);
 		bufchar[0] = ' ';
+		if(!broken)
+			gl_env.history_size++;
+
+//		print_history_at(0);
 	}
 
 	close(fd);

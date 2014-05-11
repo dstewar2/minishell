@@ -6,8 +6,6 @@
 
 int main()
 {
-
-
 	int n;
 	int i;
     char* buffer;
