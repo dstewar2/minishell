@@ -171,7 +171,7 @@ void clear_line(){
     if(!gl_env.current_cmd){
         return;
     }
-    my_int(gl_env.cmd_i);
+//    my_int(gl_env.cmd_i);
    // return;
     int i=gl_env.cmd_i;
     while(i--){
