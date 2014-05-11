@@ -61,7 +61,7 @@ int main()
 //        if(!gl_env.flag){
             //if screen showed successfully
 //        my_int(buffer[0]);
-        if (buffer[0] >= 'A' && buffer[0] <= 'Z' || buffer[0] >= 'a' && buffer[0] <= 'z' || buffer[0]>='0' && buffer[0]<='9'){
+        if (buffer[0] == ' ' || buffer[0] >= 'A' && buffer[0] <= 'Z' || buffer[0] >= 'a' && buffer[0] <= 'z' || buffer[0]>='0' && buffer[0]<='9'){
 
 //            my_char(buffer[0]);
             update_current_command(buffer[0],gl_env.cmd_i);
@@ -133,6 +133,10 @@ int main()
             gl_env.cmd_i = 0;
             my_str("\n");
             my_str(gl_env.prompt);
+        }else{
+
+            update_current_command(buffer[0],gl_env.cmd_i);
+            gl_env.cmd_i++;
         }
         //my_str(buffer);
     }
@@ -183,7 +187,7 @@ void clear_line(){
     }
     gl_env.cmd_i = my_strlen(gl_env.current_cmd);
     //move to beginning of line 
-    i = my_strlen(gl_env.current_cmd);
+    i = my_strlen(gl_env.current_cmd)+1;
     while(i--){
         moveleft();
     }
