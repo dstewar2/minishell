@@ -91,6 +91,10 @@ int main()
             }
             
         }
+        else if(buffer[0] == CTRLL){
+            
+
+        }
         else if(!my_strcmp(buffer, KU)){
             //previous_command();
         }
@@ -272,6 +276,7 @@ void init_terminal(){
 void init_caps(){
 
     gl_env.clear = term_get_cap(CLEAR);
+
     gl_env.move = term_get_cap(MOVE);
     gl_env.left = term_get_cap(LEFT);
     gl_env.curs_left = term_get_cap("le");
