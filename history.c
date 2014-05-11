@@ -11,8 +11,9 @@ void print_history_at(unsigned int n)
 	}
 	else
 	{
-		delete_from(0);
+		clear_line();
 		insert_at(gl_env.history_array[n], 0);
+//		my_str(gl_env.history_array[n]);
 	}
 }
 
@@ -23,7 +24,6 @@ void older_history() //to be called when pressing up on the keyboard
 		gl_env.history_current++; //go one item further back into history
 		print_history_at(gl_env.history_current); //print that item from history into the prompt
 	}
-	exit(0);
 }
 
 void newer_history()
@@ -36,7 +36,6 @@ void newer_history()
 			print_history_at(gl_env.history_current);
 		}
 	}
-	exit(0);
 }
 
 void addtohist(char *command)
@@ -83,7 +82,6 @@ void savehist()
 
 		close(fd); //close/save .history
 	}
-	exit(0); //end function
 }
 
 void loadhist() //this totally won't work.  Needs a lot of editing.
@@ -91,30 +89,33 @@ void loadhist() //this totally won't work.  Needs a lot of editing.
 	int fd;
 	int i;
 	int j;
-	char bufchar;
+	int n;
+	char *bufchar;
 
-	if(gl_env.history_size > 0)
+	fd = open(".history", O_RDONLY);
+	if(!fd) //most likely because it doesn't exist
 	{
-		fd = open(".history", O_RDONLY);
-		if(!fd) //most likely because it doesn't exist
-		{
-			my_str("Error opening .history! \n");
-			exit(2);
-		}
-
-		for(i = 0; i < HISTMAX; i++)
-		{
-			j = 0;
-			gl_env.history_array[i] = xmalloc((sizeof(char)) * BUF_SZ);
-			while (bufchar != '\n')
-			{
-				bufchar = read(fd, gl_env.history_array[i], 1);
-				gl_env.history_array[i][j] = bufchar;
-				j++;
-			}
-		}
-
-		close(fd);
+		my_str("Error opening .history! \n");
+		exit(2);
 	}
-	exit(0);
+	my_str(".history opened!\n");
+	for(i = 0; i < HISTMAX; i++)
+	{
+		j = 0;
+		gl_env.history_array[i] = (char *)xmalloc((sizeof(char)) * BUF_SZ);
+		bufchar = (char *)xmalloc(sizeof(char) * 1);
+		while (bufchar[0] != '\n')
+		{
+			n = read(fd, bufchar, 1);
+//			my_str("bufchar set");
+			gl_env.history_array[i][j] = bufchar[0];
+//			my_str("set j of i of array to bufchar");
+			j++;
+//			my_int(j);
+		}
+//		my_str(gl_env.history_array[i]);
+		bufchar[0] = ' ';
+	}
+
+	close(fd);
 }
