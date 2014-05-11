@@ -124,6 +124,9 @@ void    update_current_command(char, int);
 void	delete_from(int);
 void	copy_from(int);
 void	insert_at(char *, int);
+void    delete_char();
+void    delete_line();
+void    rewrite_line();
 
 //END
 
@@ -164,6 +167,7 @@ void    move_cursor_to_item(int);
 void    quit_program();
 //void  term_underline();
 void    term_standout();
+
 void    term_standend();/*
 void    term_underend();*/
 #endif

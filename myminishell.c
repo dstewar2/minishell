@@ -11,6 +11,7 @@ int main()
 	int n;
 	int i;
     char* buffer;
+    gl_env.history_current = -1;
     gl_env.prompt = "$ : ";
     gl_env.current_cmd = malloc(1);
     gl_env.current_cmd[0] = '\0';
@@ -76,6 +77,20 @@ int main()
                 insert_at(gl_env.clipboard, gl_env.cmd_i);
             }
         }
+        else if(buffer[0] == CTRLA){
+            int k = gl_env.cmd_i;
+            while(k--){
+                moveleft();
+            }
+        }
+        else if(buffer[0] == CTRLE){
+            //move to end of line
+            int k = my_strlen(gl_env.current_cmd) - gl_env.cmd_i;
+            while(k--){
+                moveright();
+            }
+            
+        }
         else if(!my_strcmp(buffer, KU)){
             //previous_command();
         }
@@ -110,6 +125,39 @@ int main()
     restore_terminal();
     //Initialize terminal
 }
+//backspace
+void delete_char(){
+    //make new thing
+
+}
+
+//deletes line, rewrites prompt
+void delete_line(){
+    //clear line
+    int i=gl_env.cmd_i;
+    while(i--)
+        moveleft();
+    i = my_strlen(gl_env.prompt);
+    while(i--)
+        curs_left();
+    i = my_strlen(gl_env.prompt)+my_strlen(gl_env.current_cmd);
+    while(i--);
+        my_char(' ');
+    //move to beginning of line 
+    i = my_strlen(gl_env.prompt)+my_strlen(gl_env.current_cmd);
+    //write prompt
+    my_str(gl_env.prompt);
+    gl_env.cmd_i = 0;
+}
+//rewrites line and places cursor at index i
+void rewrite_line(int i){
+    delete_line();
+    my_str("cmd");
+    while(i-->0){
+        moveright();
+    }
+}
+
 void update_current_command(char c, int i){
     char * new_cmd;
     //my_str("\nAdding ");
