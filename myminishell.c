@@ -34,10 +34,13 @@ int main()
     }*/
 //    return 1;
     init_terminal();
-    signal(SIGINT, quit_program);
+    // signal(SIGINT, quit_program);
     //signal(SIGWINCH, show_elems);
     //INIT CAPS MAKES ME SEGFAULT AND I DONT KNOW WHY
     init_caps();
+//    restore_terminal();
+//    my_str("about to return");
+//    return 0;
     /*restore_terminal();
     return 0;*/
     //term_hide_cursor();
@@ -45,6 +48,7 @@ int main()
     
     int j = 8;
     term_clear();
+    //my_int(gl_env.win.ws_col);
     //my_str("\n");
     my_str(gl_env.prompt);
     while(1){
@@ -65,10 +69,11 @@ int main()
         else if(buffer[0] == CTRLK){
             copy_from(gl_env.cmd_i);
             delete_from(gl_env.cmd_i);
-        }else if(buffer[0] == CTRLY){
-            my_str(gl_env.clipboard);
+        }
+        else if(buffer[0] == CTRLY){
+            //my_str(gl_env.clipboard);
             if(gl_env.clipboard){
-            //    insert_at(gl_env.clipboard, gl_env.cmd_i);
+                insert_at(gl_env.clipboard, gl_env.cmd_i);
             }
         }
         else if(!my_strcmp(buffer, KU)){
@@ -206,6 +211,7 @@ void init_terminal(){
     line.c_lflag &= (~(ICANON|ECHO|ISIG));
     ioctl(0, TCSETA, &line);
     ioctl(0, TIOCGWINSZ, &(gl_env.win));
+    my_int(gl_env.win.ws_col);
     name = ttyname(0);
     fd = open(name, O_WRONLY);
     gl_env.stdio_backup = dup(1);
@@ -224,8 +230,8 @@ void init_caps(){
     gl_env.curs_right = term_get_cap("nd");
     gl_env.curs_up = term_get_cap("up");
     gl_env.curs_down = term_get_cap("do");
-    gl_env.auto_wrap = term_get_cap("am");
-    gl_env.left_wrap = term_get_cap("bw");
+//    gl_env.auto_wrap = term_get_cap("am");
+//    gl_env.left_wrap = term_get_cap("bw");
     //might ot be specifieid on linux machine
     gl_env.beg_line = term_get_cap("cr");
 
@@ -245,7 +251,7 @@ void restore_terminal(){
     //term_clear();
     ioctl(0, TCSETA, &gl_env.line_backup);
 
-    my_str("RESTORED");
+//    my_str("RESTORED");
     //how to restore window thing?
     tputs(VECAP, 1, my_termprint);
     dup2(gl_env.stdio_backup,1);
@@ -253,13 +259,17 @@ void restore_terminal(){
 //this function accepts a string and returns the string for the termcap used
 char *term_get_cap(char* cap){
 
-    char area[2048];
-    char *str;
+    char* area = malloc(2048);
+    char* str;
+
+    //return 0;
     str = tgetstr(cap ,(char**)(&area));
     if(!str){
-        my_str("bad cal");
+        my_str("bad call on");
+        my_str(cap);
 
     }
+    //return 0;
     return str;
 
 }
@@ -280,15 +290,19 @@ void moveright(){
     //return;
     if(gl_env.cmd_i < my_strlen(gl_env.current_cmd)){
         gl_env.cmd_i++;
+        int size_line = gl_env.cmd_i + my_strlen(gl_env.prompt);
         //term_move_cursor(get_curs_x(), get_curs_y());
-        if(!(gl_env.cmd_i % gl_env.win.ws_col)){
+        //if(!(gl_env.cmd_i % gl_env.win.ws_col)){
+        if(!(size_line % gl_env.win.ws_col)){
             //if need to move down a line
             //tputs(gl_env.curs_down, 1, my_termprint);
+            //my_str("IT HAPPENED");
             curs_down();
             move_beg();
 
         }else{
-            tputs(gl_env.curs_right, 1, my_termprint);
+            curs_right();
+            //tputs(gl_env.curs_right, 1, my_termprint);
         }
     }
     //int cmd_len = my_strlen(gl_env.current_cmd);
@@ -305,12 +319,14 @@ void moveleft(){
     //move_beg();
  //   sleep(1);
     if(gl_env.cmd_i > 0){
+        int size_line = gl_env.cmd_i + my_strlen(gl_env.prompt);
         gl_env.cmd_i--;
-        if((gl_env.win.ws_col-1)==(gl_env.cmd_i % gl_env.win.ws_col)){
+        //if((gl_env.win.ws_col-1)==(gl_env.cmd_i % gl_env.win.ws_col)){
+        if(!(size_line % gl_env.win.ws_col)){
             //if need to move up a line
+//            my_str("THIS SHOULD HAPPEN");
             curs_up();
             move_end();
-            my_str("bad");
         }else{
             //tputs(gl_env.curs_left, 1, my_termprint);
             //curs_down();
@@ -355,7 +371,9 @@ void insert_at(char* str, int i){
         return;
     }
     while(c = str[temp++]){
+//        my_str("UPDATING\n");
         update_current_command(c, i);
+        gl_env.cmd_i++;
         i++;
     }
     /*int i = 0;
@@ -372,7 +390,7 @@ void panic(char* str){
 }
 //this quits the program. gracefully
 void quit_program(){
-    //restore_terminal();
+    restore_terminal();
     exit(0);
 }
 
@@ -418,7 +436,7 @@ void move_beg(){
 void move_end(){
     ioctl(0, TIOCGWINSZ, &(gl_env.win));
     int size_col = gl_env.win.ws_row;
-    my_int(size_col);
+//    my_int(size_col);
     move_beg();
     while(--size_col){
         curs_right();
