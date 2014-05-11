@@ -11,8 +11,9 @@ void print_history_at(unsigned int n)
 	}
 	else
 	{
-		delete_from(0);
-		insert_at(gl_env.history_array[n], 0);
+//		delete_from(0);
+//		insert_at(gl_env.history_array[n], 0);
+		my_str(gl_env.history_array[n]);
 	}
 	exit(0);
 }

@@ -7,150 +7,7 @@
 int main()
 {
 
-/*addtohist("1");
-addtohist("2");
-addtohist("3");
-addtohist("4");
-addtohist("5");
-addtohist("6");
-addtohist("7");
-addtohist("8");
-addtohist("9");
-my_str(gl_env.history_array[0]);
-addtohist("10");
-addtohist("11");
-addtohist("12");
-addtohist("13");
-addtohist("14");
-addtohist("15");
-addtohist("16");
-addtohist("17");
-addtohist("18");
-addtohist("19");
-my_str(gl_env.history_array[0]);
-addtohist("20");
-addtohist("21");
-addtohist("22");
-addtohist("23");
-addtohist("24");
-addtohist("25");
-addtohist("26");
-addtohist("27");
-addtohist("28");
-addtohist("29");
-my_str(gl_env.history_array[0]);
-addtohist("30");
-addtohist("31");
-addtohist("32");
-addtohist("33");
-addtohist("34");
-addtohist("35");
-addtohist("36");
-addtohist("37");
-addtohist("38");
-addtohist("39");
-my_str(gl_env.history_array[0]);
-addtohist("40");
-addtohist("41");
-addtohist("42");
-addtohist("43");
-addtohist("44");
-addtohist("45");
-addtohist("46");
-addtohist("47");
-addtohist("48");
-addtohist("49");
-my_str(gl_env.history_array[0]);
-addtohist("50");
-addtohist("51");
-addtohist("52");
-addtohist("53");
-addtohist("54");
-addtohist("55");
-addtohist("56");
-addtohist("57");
-addtohist("58");
-addtohist("59");
-my_str(gl_env.history_array[0]);
-addtohist("60");
-addtohist("61");
-addtohist("62");
-addtohist("63");
-addtohist("64");
-addtohist("65");
-addtohist("66");
-addtohist("67");
-addtohist("68");
-addtohist("69");
-my_str(gl_env.history_array[0]);
-addtohist("70");
-addtohist("71");
-addtohist("72");
-addtohist("73");
-addtohist("74");
-addtohist("75");
-addtohist("76");
-addtohist("77");
-addtohist("78");
-addtohist("79");
-my_str(gl_env.history_array[0]);
-addtohist("80");
-addtohist("81");
-addtohist("82");
-addtohist("83");
-addtohist("84");
-addtohist("85");
-addtohist("86");
-addtohist("87");
-addtohist("88");
-addtohist("89");
-my_str(gl_env.history_array[0]);
-addtohist("90");
-addtohist("91");
-addtohist("92");
-addtohist("93");
-my_str(gl_env.history_array[0]);
-addtohist("94");
-my_str(gl_env.history_array[0]);
-addtohist("95");
-my_str(gl_env.history_array[0]);
-addtohist("96");
-my_str(gl_env.history_array[0]);
-addtohist("97");
-my_str(gl_env.history_array[0]);
-addtohist("98");
-my_str(gl_env.history_array[0]);
-addtohist("99");
-my_str(gl_env.history_array[0]);
-addtohist("100");
-my_str(gl_env.history_array[0]);
-addtohist("101");
-my_str(gl_env.history_array[0]);
-addtohist("102");
-my_str(gl_env.history_array[0]);
-addtohist("103");
-addtohist("104");
-addtohist("105");
-addtohist("106");
-addtohist("107");
-addtohist("108");
-addtohist("109");*/
 
-/*	my_str(gl_env.history_array[0]);
-	my_char('\n');
-	my_str(gl_env.history_array[1]);
-	my_char('\n');
-	my_str(gl_env.history_array[2]); //should print thr33 2 one
-	my_char('\n');
-	my_str("size = ");
-	my_int(gl_env.history_size);
-	my_char('\n');*/
-    savehist();
-
-
-
-if(0)
-{
 	int n;
 	int i;
     char* buffer;
@@ -177,10 +34,13 @@ if(0)
     }*/
 //    return 1;
     init_terminal();
-    signal(SIGINT, quit_program);
+    // signal(SIGINT, quit_program);
     //signal(SIGWINCH, show_elems);
     //INIT CAPS MAKES ME SEGFAULT AND I DONT KNOW WHY
     init_caps();
+//    restore_terminal();
+//    my_str("about to return");
+//    return 0;
     /*restore_terminal();
     return 0;*/
     //term_hide_cursor();
@@ -188,6 +48,7 @@ if(0)
     
     int j = 8;
     term_clear();
+    //my_int(gl_env.win.ws_col);
     //my_str("\n");
     my_str(gl_env.prompt);
     while(1){
@@ -208,10 +69,11 @@ if(0)
         else if(buffer[0] == CTRLK){
             copy_from(gl_env.cmd_i);
             delete_from(gl_env.cmd_i);
-        }else if(buffer[0] == CTRLY){
-            my_str(gl_env.clipboard);
+        }
+        else if(buffer[0] == CTRLY){
+            //my_str(gl_env.clipboard);
             if(gl_env.clipboard){
-            //    insert_at(gl_env.clipboard, gl_env.cmd_i);
+                insert_at(gl_env.clipboard, gl_env.cmd_i);
             }
         }
         else if(!my_strcmp(buffer, KU)){
@@ -236,6 +98,7 @@ if(0)
             quit_program();
         }
         else if(n==1 && buffer[0]=='\n'){
+			addtohist(gl_env.current_cmd);
             my_exec(gl_env.current_cmd);
             gl_env.current_cmd = NULL;
             gl_env.cmd_i = 0;
@@ -246,7 +109,6 @@ if(0)
     }
     restore_terminal();
     //Initialize terminal
-}
 }
 void update_current_command(char c, int i){
     char * new_cmd;
@@ -349,6 +211,7 @@ void init_terminal(){
     line.c_lflag &= (~(ICANON|ECHO|ISIG));
     ioctl(0, TCSETA, &line);
     ioctl(0, TIOCGWINSZ, &(gl_env.win));
+    my_int(gl_env.win.ws_col);
     name = ttyname(0);
     fd = open(name, O_WRONLY);
     gl_env.stdio_backup = dup(1);
@@ -367,8 +230,8 @@ void init_caps(){
     gl_env.curs_right = term_get_cap("nd");
     gl_env.curs_up = term_get_cap("up");
     gl_env.curs_down = term_get_cap("do");
-    gl_env.auto_wrap = term_get_cap("am");
-    gl_env.left_wrap = term_get_cap("bw");
+//    gl_env.auto_wrap = term_get_cap("am");
+//    gl_env.left_wrap = term_get_cap("bw");
     //might ot be specifieid on linux machine
     gl_env.beg_line = term_get_cap("cr");
 
@@ -388,7 +251,7 @@ void restore_terminal(){
     //term_clear();
     ioctl(0, TCSETA, &gl_env.line_backup);
 
-    my_str("RESTORED");
+//    my_str("RESTORED");
     //how to restore window thing?
     tputs(VECAP, 1, my_termprint);
     dup2(gl_env.stdio_backup,1);
@@ -396,13 +259,17 @@ void restore_terminal(){
 //this function accepts a string and returns the string for the termcap used
 char *term_get_cap(char* cap){
 
-    char area[2048];
-    char *str;
+    char* area = malloc(2048);
+    char* str;
+
+    //return 0;
     str = tgetstr(cap ,(char**)(&area));
     if(!str){
-        my_str("bad cal");
+        my_str("bad call on");
+        my_str(cap);
 
     }
+    //return 0;
     return str;
 
 }
@@ -423,15 +290,19 @@ void moveright(){
     //return;
     if(gl_env.cmd_i < my_strlen(gl_env.current_cmd)){
         gl_env.cmd_i++;
+        int size_line = gl_env.cmd_i + my_strlen(gl_env.prompt);
         //term_move_cursor(get_curs_x(), get_curs_y());
-        if(!(gl_env.cmd_i % gl_env.win.ws_col)){
+        //if(!(gl_env.cmd_i % gl_env.win.ws_col)){
+        if(!(size_line % gl_env.win.ws_col)){
             //if need to move down a line
             //tputs(gl_env.curs_down, 1, my_termprint);
+            //my_str("IT HAPPENED");
             curs_down();
             move_beg();
 
         }else{
-            tputs(gl_env.curs_right, 1, my_termprint);
+            curs_right();
+            //tputs(gl_env.curs_right, 1, my_termprint);
         }
     }
     //int cmd_len = my_strlen(gl_env.current_cmd);
@@ -448,12 +319,14 @@ void moveleft(){
     //move_beg();
  //   sleep(1);
     if(gl_env.cmd_i > 0){
+        int size_line = gl_env.cmd_i + my_strlen(gl_env.prompt);
         gl_env.cmd_i--;
-        if((gl_env.win.ws_col-1)==(gl_env.cmd_i % gl_env.win.ws_col)){
+        //if((gl_env.win.ws_col-1)==(gl_env.cmd_i % gl_env.win.ws_col)){
+        if(!(size_line % gl_env.win.ws_col)){
             //if need to move up a line
+//            my_str("THIS SHOULD HAPPEN");
             curs_up();
             move_end();
-            my_str("bad");
         }else{
             //tputs(gl_env.curs_left, 1, my_termprint);
             //curs_down();
@@ -498,7 +371,9 @@ void insert_at(char* str, int i){
         return;
     }
     while(c = str[temp++]){
+//        my_str("UPDATING\n");
         update_current_command(c, i);
+        gl_env.cmd_i++;
         i++;
     }
     /*int i = 0;
@@ -515,7 +390,7 @@ void panic(char* str){
 }
 //this quits the program. gracefully
 void quit_program(){
-    //restore_terminal();
+    restore_terminal();
     exit(0);
 }
 
@@ -561,7 +436,7 @@ void move_beg(){
 void move_end(){
     ioctl(0, TIOCGWINSZ, &(gl_env.win));
     int size_col = gl_env.win.ws_row;
-    my_int(size_col);
+//    my_int(size_col);
     move_beg();
     while(--size_col){
         curs_right();
