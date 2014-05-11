@@ -292,7 +292,7 @@ int my_exec(char *cmd){
 		{
 			if ( execvp(vect[0], vect) < 0 )
 			{
-				my_str("Execution problem \n");
+				my_str("Bad Command \n");
                 my_str(cmd);
 				exit(0);
 			}

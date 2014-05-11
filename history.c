@@ -16,7 +16,6 @@ void print_history_at(unsigned int n)
             return;
         }
 		clear_line();
-//        my_str("GOT HERE");
         my_str(gl_env.history_array[n]);
         gl_env.current_cmd = my_strdup(gl_env.history_array[n]);
         gl_env.cmd_i = my_strlen(gl_env.current_cmd);
@@ -29,10 +28,13 @@ void print_history_at(unsigned int n)
 void older_history() //to be called when pressing up on the keyboard
 {
 	if(gl_env.history_current != gl_env.history_size - 1) //If the user is not at the earliest item in history
+	//if(gl_env.history_current < gl_env.history_size - 1) //If the user is not at the earliest item in history
 	{
+        return;
 		gl_env.history_current++; //go one item further back into history
 		print_history_at(gl_env.history_current); //print that item from history into the prompt
 	}
+    
 }
 
 void newer_history()
