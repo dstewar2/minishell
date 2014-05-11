@@ -11,6 +11,7 @@ int main()
 	int n;
 	int i;
     char* buffer;
+    loadhist();
     gl_env.history_current = -1;
     gl_env.prompt = "$ : ";
     gl_env.current_cmd = malloc(1);
@@ -121,6 +122,7 @@ int main()
 //      }
         else if(n==1 && buffer[0]==ESC){
             my_str("quitting program");
+
             quit_program();
         }
         else if(n==1 && buffer[0]=='\n'){
@@ -507,6 +509,7 @@ void quit_program(){
     term_clear();
     my_str("Goodbye!\n");
     restore_terminal();
+    savehist();
     exit(0);
 }
 

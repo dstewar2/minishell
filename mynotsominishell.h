@@ -114,6 +114,8 @@ t_env   gl_env;
 // created as a structure to limit number of globals to 1
 
 //ADDED FOR MYNOTSOMINISHELL
+void    loadhist();
+void    savehist();
 void    load_history();
 void    save_history(char *);
 void    delete_char_at(int, int);
