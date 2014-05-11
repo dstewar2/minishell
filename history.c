@@ -116,6 +116,8 @@ void loadhist() //this totally won't work.  Needs a lot of editing.
 		while (bufchar[0] != '\n')
 		{
 			n = read(fd, bufchar, 1);
+			if(!n)
+				break;
 //			my_str("bufchar set");
 			gl_env.history_array[i][j] = bufchar[0];
 //			my_str("set j of i of array to bufchar");
