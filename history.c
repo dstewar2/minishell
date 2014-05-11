@@ -12,7 +12,11 @@ void print_history_at(unsigned int n)
 	else
 	{
 		clear_line();
-		insert_at(gl_env.history_array[n], 0);
+        my_str(gl_env.history_array[n]);
+        gl_env.current_cmd = my_strdup(gl_env.history_array[n]);
+        gl_env.cmd_i = my_strlen(gl_env.current_cmd);
+        
+		//insert_at(gl_env.history_array[n], 0);
 //		my_str(gl_env.history_array[n]);
 	}
 }
